@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Map;
 
 
-public class Currency {
+public class CurrencyPOJO {
 
     @SerializedName("rates")
     public Map<String, Double> rates;

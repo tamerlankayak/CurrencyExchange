@@ -13,11 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.currencyexchange.R;
 import com.example.currencyexchange.model.Rate;
+import com.example.currencyexchange.viewinterface.OnItemClickListener;
 
 public class CurrencyAdapter extends ListAdapter<Rate, CurrencyAdapter.CurrencyViewHolder> {
 
-    public CurrencyAdapter() {
+    private final OnItemClickListener listener;
+
+
+    public CurrencyAdapter(OnItemClickListener listener) {
         super(CurrencyAdapter.itemCallback);
+        this.listener = listener;
     }
 
     class CurrencyViewHolder extends RecyclerView.ViewHolder {
@@ -31,13 +36,20 @@ public class CurrencyAdapter extends ListAdapter<Rate, CurrencyAdapter.CurrencyV
             super(itemView);
         }
 
-        void bind(Rate rate) {
+        void bind(Rate rate,final OnItemClickListener listener) {
             currentRate = rate;
             currencyName.setText(rate.getKey());
             currencyAmount.setText("" + rate.getName());
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    listener.onItemClick(rate);
+                    return true;
+                }
+            });
         }
     }
-
 
     @NonNull
     @Override
@@ -49,7 +61,7 @@ public class CurrencyAdapter extends ListAdapter<Rate, CurrencyAdapter.CurrencyV
     @Override
     public void onBindViewHolder(@NonNull CurrencyViewHolder holder, int position) {
         Rate rates = getItem(position);
-        holder.bind(rates);
+        holder.bind(rates,listener);
     }
 
 
