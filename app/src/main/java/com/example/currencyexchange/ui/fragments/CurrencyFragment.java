@@ -1,13 +1,6 @@
 package com.example.currencyexchange.ui.fragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +8,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
-import com.example.currencyexchange.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.currencyexchange.adapter.CurrencyAdapter;
 import com.example.currencyexchange.databinding.FragmentCurrencyBinding;
-import com.example.currencyexchange.databinding.FragmentFavoritesBinding;
 import com.example.currencyexchange.db.DbConnect;
 import com.example.currencyexchange.entity.CurencyRatesEntity;
 import com.example.currencyexchange.entity.CurencyRatesEntityDao;
@@ -30,7 +27,7 @@ import com.example.currencyexchange.viewinterface.OnItemClickListener;
 
 import java.util.List;
 
-public class CurrencyFragment extends Fragment  implements CurrencyView {
+public class CurrencyFragment extends Fragment implements CurrencyView {
 
     private FragmentCurrencyBinding binding;
     CurrencyAdapter currencyAdapter;
@@ -49,6 +46,8 @@ public class CurrencyFragment extends Fragment  implements CurrencyView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         currencyPresenter = new CurrencyPresenter(this);
         currencyPresenter.getCurrencyByCountry("azn");
 
@@ -64,6 +63,16 @@ public class CurrencyFragment extends Fragment  implements CurrencyView {
         });
     }
 
+
+    @Override
+    public void showProgressBar() {
+        binding.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        binding.progressBar.setVisibility(View.INVISIBLE);
+    }
 
     @Override
     public void setDataToRecyclerView(List<Rate> rates, List<String> countries) {

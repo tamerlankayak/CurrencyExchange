@@ -1,7 +1,6 @@
 package com.example.currencyexchange.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,22 +14,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.currencyexchange.adapter.FavoritesAdapter;
 import com.example.currencyexchange.databinding.FragmentFavoritesBinding;
-import com.example.currencyexchange.db.DbConnect;
 import com.example.currencyexchange.entity.CurencyRatesEntity;
 import com.example.currencyexchange.entity.CurencyRatesEntityDao;
-import com.example.currencyexchange.entity.DaoSession;
-import com.example.currencyexchange.viewinterface.OnDbItemClickListener;
+import com.example.currencyexchange.presenter.FavoritePresenter;
+import com.example.currencyexchange.viewinterface.FavoritesView;
 
 import java.util.List;
 
 
-public class FavoritesFragment extends Fragment {
+public class FavoritesFragment extends Fragment implements FavoritesView{
     private FragmentFavoritesBinding binding;
     CurencyRatesEntityDao curencyRatesEntityDao;
-    List<CurencyRatesEntity> favoritesList;
 
     FavoritesAdapter favoritesAdapter;
     RecyclerView recyclerView;
+    FavoritePresenter favoritePresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,31 +41,8 @@ public class FavoritesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        DaoSession daoSession = ((DbConnect) requireActivity().getApplication()).getDaoSession();
-        curencyRatesEntityDao = daoSession.getCurencyRatesEntityDao();
-
-        favoritesList = curencyRatesEntityDao.queryBuilder().list();
-
-        for (CurencyRatesEntity itemfav : favoritesList) {
-            Log.e("TAG", "onViewCreated: " + itemfav.getCurrencyAmount());
-        }
-
-        recyclerView = binding.recyclerviewFavorites;
-
-        favoritesAdapter = new FavoritesAdapter(new OnDbItemClickListener() {
-            @Override
-            public void onItemClick(CurencyRatesEntity rate) {
-                CurencyRatesEntity curencyRatesEntity = new CurencyRatesEntity();
-                curencyRatesEntity.setCurrencyName(rate.getCurrencyName());
-                curencyRatesEntity.setCurrencyAmount(rate.getCurrencyAmount());
-                curencyRatesEntityDao.save(curencyRatesEntity);
-                Toast.makeText(requireActivity().getApplicationContext(), "Currency added to favorites successfully", Toast.LENGTH_SHORT).show();
-            }
-        });
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(binding.getRoot().getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(favoritesAdapter);
-        favoritesAdapter.submitList(favoritesList);
+        favoritePresenter = new FavoritePresenter(this);
+        favoritePresenter.getDataFromDb(this.getActivity());
     }
 
     @Override
@@ -75,4 +50,28 @@ public class FavoritesFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    @Override
+    public void showProgressBar() {
+        binding.progressBar2.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        binding.progressBar2.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void setDataToFavoritsAdapter(List<CurencyRatesEntity> curencyRatesEntities) {
+
+        recyclerView = binding.recyclerviewFavorites;
+
+        favoritesAdapter = new FavoritesAdapter();
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(binding.getRoot().getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setAdapter(favoritesAdapter);
+        favoritesAdapter.submitList(curencyRatesEntities);
+    }
+
+
 }

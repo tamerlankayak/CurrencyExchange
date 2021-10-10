@@ -14,16 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.currencyexchange.R;
 import com.example.currencyexchange.entity.CurencyRatesEntity;
-import com.example.currencyexchange.viewinterface.OnDbItemClickListener;
 
 public class FavoritesAdapter extends ListAdapter<CurencyRatesEntity, FavoritesAdapter.FavoritesViewHolder> {
 
-    private final OnDbItemClickListener listener;
 
-
-    public FavoritesAdapter(OnDbItemClickListener listener) {
+    public FavoritesAdapter() {
         super(FavoritesAdapter.itemCallback);
-        this.listener = listener;
     }
 
     class FavoritesViewHolder extends RecyclerView.ViewHolder {
@@ -37,18 +33,11 @@ public class FavoritesAdapter extends ListAdapter<CurencyRatesEntity, FavoritesA
             super(itemView);
         }
 
-        void bind(CurencyRatesEntity rate, final OnDbItemClickListener listener) {
+        void bind(CurencyRatesEntity rate) {
             curencyRatesEntity = rate;
             currencyName.setText(rate.getCurrencyName());
             currencyAmount.setText("" + rate.getCurrencyAmount());
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    listener.onItemClick(rate);
-                    return true;
-                }
-            });
         }
     }
 
@@ -62,7 +51,7 @@ public class FavoritesAdapter extends ListAdapter<CurencyRatesEntity, FavoritesA
     @Override
     public void onBindViewHolder(@NonNull FavoritesViewHolder holder, int position) {
         CurencyRatesEntity rates = getItem(position);
-        holder.bind(rates, listener);
+        holder.bind(rates);
     }
 
 

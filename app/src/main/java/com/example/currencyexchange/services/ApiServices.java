@@ -2,10 +2,12 @@ package com.example.currencyexchange.services;
 
 import com.example.currencyexchange.pojo.CurrencyPOJO;
 
+import dagger.Component;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+
 
 public interface ApiServices {
 
@@ -13,5 +15,5 @@ public interface ApiServices {
     Flowable<CurrencyPOJO> getCurrencyList();
 
     @GET("latest")
-    Observable<CurrencyPOJO> getCurrencyByCountry(@Query("base") String countryName);
+    Flowable<CurrencyPOJO> getCurrencyByCountry(@Query("base") String countryName);
 }

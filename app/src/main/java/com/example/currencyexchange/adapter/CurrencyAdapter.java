@@ -15,11 +15,13 @@ import com.example.currencyexchange.R;
 import com.example.currencyexchange.model.Rate;
 import com.example.currencyexchange.viewinterface.OnItemClickListener;
 
+import javax.inject.Inject;
+
 public class CurrencyAdapter extends ListAdapter<Rate, CurrencyAdapter.CurrencyViewHolder> {
 
     private final OnItemClickListener listener;
 
-
+    @Inject
     public CurrencyAdapter(OnItemClickListener listener) {
         super(CurrencyAdapter.itemCallback);
         this.listener = listener;
