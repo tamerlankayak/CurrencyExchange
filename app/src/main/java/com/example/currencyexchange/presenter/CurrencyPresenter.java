@@ -45,6 +45,7 @@ public class CurrencyPresenter {
 
     List<Rate> rates = new ArrayList<>();
 
+//For async operations using RxJava libraru
     public void getCurrencyByCountry(String countryName) {
         currencyView.showProgressBar();
         rates.clear();
