@@ -1,4 +1,5 @@
 # CurrencyExchange
 Code created for interview task.
 
-Design patterin is MVP
+Design pattern is MVP.
+Database GreenDb
